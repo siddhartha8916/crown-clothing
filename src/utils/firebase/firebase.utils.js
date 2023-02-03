@@ -62,11 +62,11 @@ export const addCollectionAndDocuments = async (
   console.log("Product Importing Done");
 };
 
-export const getCategoriesAndDocuments = async() => {
+export const getCategoriesAndDocuments = async () => {
   const collectionRef = collection(db, "categories");
-  const q = query(collectionRef)
-  const querySnapshot = await getDocs(q)
-  return querySnapshot.docs.map(docSnapshot => docSnapshot.data())
+  const q = query(collectionRef);
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 
   // const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot)=>{
   //   const {title, items} = docSnapshot.data();
@@ -83,7 +83,7 @@ export const createUserDocumentFromAuth = async (
   if (!userAuth) return;
 
   const userDocRef = doc(db, "users", userAuth.uid);
-  // console.log(userDocRef);
+  // console.log('User Doc',userDocRef);
 
   const userSnapshot = await getDoc(userDocRef);
   // console.log(userSnapshot.exists());
@@ -103,7 +103,7 @@ export const createUserDocumentFromAuth = async (
     }
   }
 
-  return userDocRef;
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -120,3 +120,16 @@ export const signOutUser = async () => signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};
