@@ -15,7 +15,7 @@ root.render(
   // <React.StrictMode>
   <Provider store={store}>
     <PersistGate persistor={persistor} loading={null}>
-      <Elements stripe={stripePromise}>
+      <Elements stripe={stripePromise} >
         <App />
       </Elements>
     </PersistGate>
